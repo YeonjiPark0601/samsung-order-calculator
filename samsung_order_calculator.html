@@ -52,12 +52,6 @@
   .card .val.red { color: #f87171; }
   .card .sub { font-size: 11px; color: #64748b; margin-top: 2px; }
 
-  /* Progress bar */
-  .progress-row { margin-bottom: 20px; }
-  .progress-label { font-size: 11px; color: #64748b; margin-bottom: 4px; }
-  .progress-bar { height: 8px; background: #334155; border-radius: 4px; overflow: hidden; }
-  .progress-fill { height: 100%; border-radius: 4px; transition: width 0.3s, background 0.3s; }
-
   /* Table */
   .table-wrap {
     background: #1e293b;
@@ -94,6 +88,7 @@
     font-size: 15px;
   }
   .price-cell { color: #64748b; font-size: 12px; }
+  .stock-cell { color: #facc15; font-size: 15px; font-weight: 600; }
   .amount-cell { font-size: 13px; color: #94a3b8; }
   .amount-cell.has-value { color: #cbd5e1; }
 
@@ -147,6 +142,20 @@
   }
   input[type="text"]:focus { outline: none; border-color: #fb923c; background: #1a2744; box-shadow: 0 0 0 3px rgba(251,146,60,0.15); }
   input[type="text"]::placeholder { color: #475569; }
+  .opt-select {
+    background: #0f172a;
+    border: 1px solid #334155;
+    border-radius: 8px;
+    color: #e2e8f0;
+    padding: 8px 8px;
+    font-size: 13px;
+    font-family: inherit;
+    width: 100%;
+    cursor: pointer;
+    appearance: auto;
+  }
+  .opt-select:focus { outline: none; border-color: #fb923c; background: #1a2744; box-shadow: 0 0 0 3px rgba(251,146,60,0.15); }
+  .opt-select option { background: #1e293b; color: #e2e8f0; }
   .opt-name { min-width: 100px; }
   .opt-cost { min-width: 100px; }
   .btn-add, .btn-del {
@@ -175,6 +184,81 @@
   .th-lastyear { color: #64748b; }
   .lastyear-cell { font-size: 12px; color: #64748b; }
 
+  /* Recommend button */
+  .btn-recommend {
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    padding: 10px 20px;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: inherit;
+    transition: all 0.15s;
+    margin-bottom: 20px;
+  }
+  .btn-recommend:hover { transform: translateY(-1px); box-shadow: 0 4px 16px rgba(99,102,241,0.4); }
+
+  /* Modal */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.7);
+    z-index: 100;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+  }
+  .modal-overlay.open { display: flex; }
+  .modal {
+    background: #1e293b;
+    border-radius: 16px;
+    padding: 28px;
+    max-width: 720px;
+    width: 100%;
+    max-height: 85vh;
+    overflow-y: auto;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+  }
+  .modal h2 { font-size: 18px; color: #a78bfa; margin-bottom: 4px; }
+  .modal .modal-sub { font-size: 12px; color: #64748b; margin-bottom: 16px; }
+  .modal table { width: 100%; border-collapse: collapse; font-size: 13px; margin-bottom: 16px; }
+  .modal thead th { background: #334155; color: #94a3b8; font-weight: 600; padding: 8px 10px; text-align: center; font-size: 12px; }
+  .modal thead th:first-child { text-align: left; }
+  .modal tbody td { padding: 8px 10px; text-align: center; border-bottom: 1px solid #0f172a; }
+  .modal tbody td:first-child { text-align: left; font-weight: 600; }
+  .modal .row-sum td { background: #162032; font-weight: 700; border-top: 2px solid #475569; }
+  .modal .section-label { font-size: 13px; font-weight: 700; color: #94a3b8; margin: 12px 0 6px; padding-left: 8px; border-left: 3px solid #8b5cf6; }
+  .modal .insight { font-size: 12px; color: #94a3b8; line-height: 1.6; margin-bottom: 12px; padding: 10px; background: #0f172a; border-radius: 8px; }
+  .modal .insight strong { color: #e2e8f0; }
+  .btn-apply {
+    background: #6366f1;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 24px;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: inherit;
+    margin-right: 8px;
+  }
+  .btn-apply:hover { background: #818cf8; }
+  .btn-close-modal {
+    background: #334155;
+    color: #94a3b8;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 24px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: inherit;
+  }
+  .btn-close-modal:hover { background: #475569; color: #e2e8f0; }
+
   @media (max-width: 600px) {
     body { padding: 16px; }
     h1 { font-size: 18px; }
@@ -187,8 +271,14 @@
 <body>
 
 <div class="container">
-  <h1>삼성메디슨 발주 계산기 <span class="month-badge" id="monthBadge">3월</span></h1>
-  <p class="subtitle">월 목표: 433,333,333원 (VAT 별도) | 연간 목표: 52억</p>
+  <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px; margin-bottom:4px;">
+    <div>
+      <h1 style="margin-bottom:4px">삼성메디슨 발주 계산기 <span class="month-badge" id="monthBadge">3월</span></h1>
+      <p class="subtitle" style="margin-bottom:0">월 목표: 433,333,333원 (VAT 별도) | 연간 목표: 52억</p>
+    </div>
+    <button class="btn-recommend" onclick="showRecommend()">추천 발주 보기</button>
+    <button class="btn-recommend" style="background:linear-gradient(135deg,#475569,#64748b);margin-left:8px" onclick="resetAll()">초기화</button>
+  </div>
 
   <div class="cards">
     <div class="card">
@@ -208,15 +298,18 @@
       <div class="val green" id="cardTotal">0</div>
       <div class="sub" id="cardTotalVat"></div>
     </div>
+  </div>
+  <div class="cards" style="grid-template-columns: 1fr 1fr; margin-bottom: 20px;">
     <div class="card">
       <div class="label">월 목표 달성율</div>
       <div class="val" id="cardRate">0%</div>
+      <div class="sub" id="cardRateSub"></div>
     </div>
-  </div>
-
-  <div class="progress-row">
-    <div class="progress-label">월 목표 대비 <span id="progressPct">0%</span></div>
-    <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+    <div class="card">
+      <div class="label" id="cardQLabel">1Q 목표 달성율</div>
+      <div class="val" id="cardQRate">0%</div>
+      <div class="sub" id="cardQSub"></div>
+    </div>
   </div>
 
   <div class="table-wrap">
@@ -225,16 +318,20 @@
         <tr class="th-group">
           <th rowspan="2">모델</th>
           <th rowspan="2">공급가</th>
-          <th colspan="2" class="th-product col-sep">상품</th>
-          <th colspan="2" class="th-demo col-sep">견본</th>
+          <th colspan="3" class="th-product col-sep">상품</th>
+          <th colspan="3" class="th-demo col-sep">견본</th>
           <th rowspan="2" class="col-sep">합계 금액</th>
-          <th rowspan="2" class="col-sep th-lastyear">작년 동월</th>
+          <th colspan="2" class="col-sep th-lastyear">작년 동월</th>
         </tr>
         <tr>
-          <th class="th-product col-sep">수량</th>
+          <th class="th-product col-sep" style="color:#facc15">재고</th>
+          <th class="th-product">수량</th>
           <th class="th-product">금액</th>
-          <th class="th-demo col-sep">수량</th>
+          <th class="th-demo col-sep" style="color:#facc15">재고</th>
+          <th class="th-demo">수량</th>
           <th class="th-demo">금액</th>
+          <th class="th-lastyear col-sep">수량</th>
+          <th class="th-lastyear">금액</th>
         </tr>
       </thead>
       <tbody id="mainBody"></tbody>
@@ -277,6 +374,39 @@
       <div class="val" style="color:#a78bfa" id="cardDemoQty">0</div>
     </div>
   </div>
+  <div class="cards" style="grid-template-columns: 1fr 1fr; margin-bottom: 0;">
+    <div class="card" style="border:1px solid #334155">
+      <div class="label">견본 연간 한도 (26년)</div>
+      <div style="display:flex; align-items:baseline; gap:8px">
+        <div class="val" style="color:#a78bfa" id="cardDemoLimit">0 / 39</div>
+      </div>
+      <div class="sub" id="cardDemoLimitSub"></div>
+    </div>
+    <div class="card" style="border:1px solid #334155">
+      <div class="label">이번달 발주 후 잔여</div>
+      <div class="val" id="cardDemoRemain" style="color:#4ade80">0</div>
+      <div class="sub" id="cardDemoRemainSub"></div>
+    </div>
+  </div>
+
+  <div class="section-title" style="border-left-color:#64748b">분기 비교 (1Q)</div>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th style="text-align:left">월</th>
+          <th>작년 (25년)</th>
+          <th>올해 (26년)</th>
+          <th>차액 (작년-올해)</th>
+        </tr>
+      </thead>
+      <tbody id="quarterBody"></tbody>
+    </table>
+  </div>
+</div>
+
+<div class="modal-overlay" id="recModal" onclick="if(event.target===this)closeRecommend()">
+  <div class="modal" id="recContent"></div>
 </div>
 
 <script>
@@ -294,18 +424,35 @@ const PRODUCTS = [
 
 const MONTHLY_TARGET = 433333333;
 
-// 25년 3월 실적 (입고 기준, BDTS 시트)
-const LAST_YEAR = {
-  'HS40':    0,
-  'HS50':    0,
-  'V5':      109664818,  // 상품 89,624,842 + 견본 20,039,976
-  'V6':      23116251,   // 상품 23,116,251
-  'V7':      55271732,   // 견본 55,271,732
-  'V8':      96922080,   // 상품 96,922,080
-  'RS85':    57005614,   // 견본 57,005,614 (RS85 Prestige)
-  'R20':     0,
-  'HM70Evo': 0,
+// 25년 1분기 월별 발주 실적 (입고월 기준, BDTS 전체 금액 합산)
+const LAST_YEAR_QUARTER = {
+  1: 339860974,   // 25년 1월
+  2: 393398097,   // 25년 2월
+  3: 522484217,   // 25년 3월
 };
+
+// 26년 1분기 월별 발주 실적 (입고월 기준, BDTS 전체 금액 합산)
+const THIS_YEAR_QUARTER = {
+  1: 421099377,   // 26년 1월
+  2: 406602655,   // 26년 2월
+};
+
+// 25년 3월 실적 (입고월 기준, BDTS 시트 - 시스템 BDTS번호 기준 수량, 금액은 전 항목 합산)
+const LAST_YEAR = {
+  'HS40':    { qty: 0, amt: 0 },
+  'HS50':    { qty: 0, amt: 0 },
+  'V5':      { qty: 5, amt: 109664818 },
+  'V6':      { qty: 1, amt: 23816251 },
+  'V7':      { qty: 6, amt: 191900426 },
+  'V8':      { qty: 3, amt: 140097108 },
+  'RS85':    { qty: 1, amt: 57005614 },
+  'R20':     { qty: 0, amt: 0 },
+  'HM70Evo': { qty: 0, amt: 0 },
+};
+
+// 견본 연간 한도
+const DEMO_YEAR_LIMIT = 39;
+const DEMO_YEAR_USED = 10; // 26년 1~2월 입고 확정분 (V8:3, V7:3, V6:2, V5:2)
 
 // Current month (0-indexed)
 const NOW = new Date();
@@ -315,12 +462,139 @@ document.getElementById('monthBadge').textContent = (CUR_MONTH + 1) + '월';
 // State
 const productQty = new Array(PRODUCTS.length).fill(0);
 const demoQty = new Array(PRODUCTS.length).fill(0);
+const productStock = new Array(PRODUCTS.length).fill(0);
+const demoStock = new Array(PRODUCTS.length).fill(0);
 
 // Pre-fill with 3월 plan data
 const plan3Product = [0, 0, 4, 3, 3, 2, 0, 0, 0]; // V5:4, V6:3, V7:3, V8:2
 const plan3Demo    = [0, 0, 0, 1, 1, 1, 0, 0, 0]; // V6:1, V7:1, V8:1
 plan3Product.forEach((v, i) => productQty[i] = v);
 plan3Demo.forEach((v, i) => demoQty[i] = v);
+
+// 상품 재고 (2026주간회의록 대시보드 T65 하단 기준)
+// HS40:1, HS50:2, V5:3, V6:1, V7:4, V8:3
+const initProductStock = [1, 2, 3, 1, 4, 3, 0, 0, 0];
+initProductStock.forEach((v, i) => productStock[i] = v);
+
+// 견본 재고 (T91 하단 기준 - 전체 카운팅)
+// HS50:1, V5:4, V6:3, V7:6, V8:6, RS85:2, HM70Evo:1
+const initDemoStock = [0, 1, 4, 3, 6, 6, 2, 0, 1];
+initDemoStock.forEach((v, i) => demoStock[i] = v);
+
+// 옵션 카탈로그 (BDTS 기준 최신 공급단가)
+const OPT_CATALOG = {
+  'HS40': [
+    { name: 'DICOM', cost: 550000 },
+    { name: 'AUTOIMTPLUS', cost: 1122000 },
+    { name: 'ELASTOSCAN', cost: 1452000 },
+    { name: 'NEEDLEMATE-PLUS', cost: 660000 },
+    { name: 'NERVETRACK', cost: 770000 },
+    // 프로브
+    { name: 'CA2-8AD', cost: 2032800 },
+    { name: 'LA3-16AD', cost: 2032800 },
+  ],
+  'HS50': [
+    { name: 'DICOM', cost: 550000 },
+    { name: 'AUTOIMTPLUS', cost: 1122000 },
+    { name: 'NEEDLEMATE-PLUS', cost: 660000 },
+    // 프로브
+    { name: 'CA2-9AD', cost: 2800000 },
+    { name: 'LA3-14AD', cost: 2340800 },
+    { name: 'LA3-16AI', cost: 2993760 },
+  ],
+  'V5': [
+    { name: 'V5 ON PLUS PKG', cost: 700000 },
+    { name: 'BATTERYASSIST (3PACK)', cost: 400000 },
+    // 프로브
+    { name: 'CA1-7SD', cost: 4075500 },
+    { name: 'L3-22', cost: 2993760 },
+    { name: 'LA3-14AD', cost: 2926000 },
+  ],
+  'V6': [
+    { name: 'ORIENTAL PKG1', cost: 700000 },
+    { name: 'DICOM', cost: 550000 },
+    { name: 'AUTOIMTPLUS', cost: 1122000 },
+    { name: 'NEEDLEMATE-PLUS', cost: 660000 },
+    { name: 'NERVETRACK', cost: 1540000 },
+    { name: 'EZHRI', cost: 540000 },
+    { name: 'AUTOEF', cost: 1023000 },
+    { name: 'ECG-IEC', cost: 990000 },
+    // 프로브
+    { name: 'CA1-7AD', cost: 3773000 },
+    { name: 'CA1-7SD', cost: 4290000 },
+    { name: 'L3-22', cost: 3742200 },
+    { name: 'LA3-14AD', cost: 2926000 },
+    { name: 'LA3-22AI', cost: 2993760 },
+    { name: 'PA1-5A', cost: 4312000 },
+  ],
+  'V7': [
+    { name: 'ORIENTAL PKG1', cost: 700000 },
+    { name: 'DICOM', cost: 550000 },
+    { name: 'ADVR', cost: 660000 },
+    { name: 'AUTOIMTPLUS', cost: 1122000 },
+    { name: 'NEEDLEMATE-PLUS', cost: 660000 },
+    { name: 'NERVETRACK', cost: 1540000 },
+    { name: 'EZHRI', cost: 540000 },
+    { name: 'QUS', cost: 975000 },
+    { name: 'ELASTOSCANPLUS', cost: 1452000 },
+    { name: 'PANORAMICPLUS', cost: 1485000 },
+    { name: 'BATTERYASSIST', cost: 1400000 },
+    { name: 'S-SWI-CBD', cost: 2860000 },
+    // 프로브
+    { name: 'CA1-7SD', cost: 4290000 },
+    { name: 'L3-22', cost: 3742200 },
+    { name: 'LA2-14A', cost: 4000000 },
+    { name: 'LA2-9S', cost: 3449600 },
+  ],
+  'V8': [
+    { name: 'ORIENTAL PKG1', cost: 700000 },
+    { name: 'DICOM', cost: 550000 },
+    { name: 'ADVR', cost: 660000 },
+    { name: 'AUTOIMTPLUS', cost: 1122000 },
+    { name: 'NERVETRACK', cost: 1540000 },
+    { name: 'EZHRI', cost: 675000 },
+    { name: 'QUS', cost: 1125000 },
+    { name: 'CV PKG', cost: 900000 },
+    { name: 'BATTERYASSIST', cost: 1400000 },
+    { name: 'UTERINEASSIST', cost: 1540000 },
+    { name: 'S-SWI-PKG', cost: 2860000 },
+    { name: '2DFOLLICLE', cost: 550000 },
+    { name: 'V8 GI PKG1', cost: 700000 },
+    // 프로브
+    { name: 'CA1-7S', cost: 5500000 },
+    { name: 'EA2-11AR', cost: 3280000 },
+    { name: 'L3-22', cost: 3742200 },
+    { name: 'LA2-14A', cost: 4000000 },
+    { name: 'LA3-22AI', cost: 2993760 },
+    { name: 'PA1-5A', cost: 4312000 },
+  ],
+  'RS85': [
+    { name: 'MV-FLOW', cost: 1760000 },
+    { name: 'AUTOIMTPLUS', cost: 1067022 },
+    { name: 'ADVR3', cost: 627660 },
+    { name: 'PANORAMIC+', cost: 1412235 },
+    // 프로브
+    { name: 'CA1-7S', cost: 4400000 },
+    { name: 'L3-22', cost: 2993760 },
+    { name: 'LA2-14A', cost: 3200000 },
+    { name: 'LA2-9S', cost: 4312000 },
+    { name: 'LA3-22AI', cost: 3558832 },
+  ],
+  'R20': [
+    // 프로브
+    { name: 'CA1-7S', cost: 5500000 },
+    { name: 'L3-22', cost: 3742200 },
+    { name: 'LA2-14A', cost: 4000000 },
+    { name: 'LM2-18', cost: 5400000 },
+  ],
+  'HM70Evo': [
+    { name: 'HM70EVO-CART', cost: 836000 },
+    // 프로브
+    { name: 'CA2-8AD', cost: 2032800 },
+    { name: 'LA3-16AD', cost: 2541000 },
+  ],
+};
+const OPT_MODELS = Object.keys(OPT_CATALOG);
 
 // Option rows: { model, name, cost, qty }
 const options = [];
@@ -332,6 +606,31 @@ function addOption(model = '', name = '', cost = 0, qty = 1) {
 
 function removeOption(idx) {
   options.splice(idx, 1);
+  render();
+}
+
+function selectOptionModel(idx, model) {
+  const prevModel = options[idx].model;
+  options[idx].model = model;
+  const items = OPT_CATALOG[model] || [];
+  // 모델이 바뀌었을 때만 옵션명/가격 리셋
+  if (model !== prevModel) {
+    if (items.length > 0) {
+      options[idx].name = items[0].name;
+      options[idx].cost = items[0].cost;
+    } else {
+      options[idx].name = '';
+      options[idx].cost = 0;
+    }
+  }
+  render();
+}
+
+function selectOptionName(idx, name) {
+  options[idx].name = name;
+  const items = OPT_CATALOG[options[idx].model] || [];
+  const found = items.find(it => it.name === name);
+  if (found) options[idx].cost = found.cost;
   render();
 }
 
@@ -351,15 +650,44 @@ function renderOptions() {
   tbody.innerHTML = '';
   let sumAmt = 0;
 
+  // Clear old datalists
+  document.querySelectorAll('datalist[id^="dl-model"], datalist[id^="dl-opt"]').forEach(el => el.remove());
+
+  // Model datalist (shared)
+  const modelDL = document.createElement('datalist');
+  modelDL.id = 'dl-model';
+  OPT_MODELS.forEach(m => {
+    const o = document.createElement('option');
+    o.value = m;
+    modelDL.appendChild(o);
+  });
+  document.body.appendChild(modelDL);
+
   options.forEach((opt, i) => {
     const amt = opt.cost * opt.qty;
     sumAmt += amt;
+    const items = OPT_CATALOG[opt.model] || [];
+
+    // Per-row option name datalist
+    const optDL = document.createElement('datalist');
+    optDL.id = `dl-opt-${i}`;
+    items.forEach(it => {
+      const o = document.createElement('option');
+      o.value = it.name;
+      optDL.appendChild(o);
+    });
+    document.body.appendChild(optDL);
+
     const tr = document.createElement('tr');
     tr.innerHTML = `
-      <td style="padding:6px 8px"><input type="text" class="opt-name" value="${opt.model}" placeholder="V7"
-        onchange="updateOption(${i},'model',this.value)"></td>
-      <td style="padding:6px 8px"><input type="text" class="opt-name" value="${opt.name}" placeholder="ORIENTAL PKG1"
-        onchange="updateOption(${i},'name',this.value)"></td>
+      <td style="padding:6px 8px">
+        <input type="text" list="dl-model" class="opt-select" value="${opt.model}" placeholder="모델 입력/선택"
+          onchange="selectOptionModel(${i},this.value)" onfocus="this.select()">
+      </td>
+      <td style="padding:6px 8px">
+        <input type="text" list="dl-opt-${i}" class="opt-select" value="${opt.name}" placeholder="옵션 입력/선택"
+          onchange="selectOptionName(${i},this.value)" onfocus="this.select()">
+      </td>
       <td style="padding:6px 8px"><input type="text" class="opt-cost" value="${opt.cost ? fmt(opt.cost) : ''}" placeholder="1,000,000"
         onchange="updateOption(${i},'cost',this.value)" onfocus="this.select()"></td>
       <td style="padding:6px 8px"><input type="number" min="0" max="99" value="${opt.qty}" style="width:56px"
@@ -407,37 +735,48 @@ function render() {
     sumSales += pq * p.price;
     sumMargin += pq * (p.price - p.cost * 1.1);
 
-    const ly = LAST_YEAR[p.name] || 0;
+    const ly = LAST_YEAR[p.name] || { qty: 0, amt: 0 };
+    const ps = productStock[i];
+    const ds = demoStock[i];
     const tr = document.createElement('tr');
     tr.innerHTML = `
       <td>${p.name}</td>
       <td class="price-cell">${fmt(p.cost)}</td>
-      <td class="col-sep"><input type="number" min="0" max="99" value="${pq}"
+      <td class="col-sep stock-cell">${ps || '-'}</td>
+      <td><input type="number" min="0" max="99" value="${pq}"
         onchange="setQty('product',${i},this.value)" onfocus="this.select()"></td>
       <td class="amount-cell ${pAmt ? 'has-value' : ''}">${pAmt ? fmt(pAmt) : '-'}</td>
-      <td class="col-sep"><input type="number" min="0" max="99" value="${dq}" class="demo-input"
+      <td class="col-sep stock-cell">${ds || '-'}</td>
+      <td><input type="number" min="0" max="99" value="${dq}" class="demo-input"
         onchange="setQty('demo',${i},this.value)" onfocus="this.select()"></td>
       <td class="amount-cell ${dAmt ? 'has-value' : ''}">${dAmt ? fmt(dAmt) : '-'}</td>
       <td class="col-sep amount-cell ${total ? 'has-value' : ''}" style="font-weight:600">${total ? fmt(total) : '-'}</td>
-      <td class="col-sep lastyear-cell">${ly ? fmt(ly) : '-'}</td>
+      <td class="col-sep lastyear-cell">${ly.qty || '-'}</td>
+      <td class="lastyear-cell">${ly.amt ? fmt(ly.amt) : '-'}</td>
     `;
     tbody.appendChild(tr);
   });
 
   // Sum row
   const sumTotal = sumProductAmt + sumDemoAmt;
-  const sumLastYear = Object.values(LAST_YEAR).reduce((a, b) => a + b, 0);
+  const sumLastYearQty = Object.values(LAST_YEAR).reduce((a, b) => a + b.qty, 0);
+  const sumLastYearAmt = Object.values(LAST_YEAR).reduce((a, b) => a + b.amt, 0);
   const sumTr = document.createElement('tr');
   sumTr.className = 'row-sum';
+  const sumPStock = productStock.reduce((a, b) => a + b, 0);
+  const sumDStock = demoStock.reduce((a, b) => a + b, 0);
   sumTr.innerHTML = `
     <td class="total-row-label">기기 합계</td>
     <td></td>
-    <td class="col-sep" style="color:#38bdf8">${sumProductQty}</td>
+    <td class="col-sep" style="color:#facc15">${sumPStock}</td>
+    <td style="color:#38bdf8">${sumProductQty}</td>
     <td style="color:#38bdf8">${fmt(sumProductAmt)}</td>
-    <td class="col-sep" style="color:#a78bfa">${sumDemoQty}</td>
+    <td class="col-sep" style="color:#facc15">${sumDStock}</td>
+    <td style="color:#a78bfa">${sumDemoQty}</td>
     <td style="color:#a78bfa">${fmt(sumDemoAmt)}</td>
     <td class="col-sep" style="color:#4ade80">${fmt(sumTotal)}</td>
-    <td class="col-sep lastyear-cell" style="font-weight:700">${fmt(sumLastYear)}</td>
+    <td class="col-sep lastyear-cell" style="font-weight:700">${sumLastYearQty}</td>
+    <td class="lastyear-cell" style="font-weight:700">${fmt(sumLastYearAmt)}</td>
   `;
   tbody.appendChild(sumTr);
 
@@ -456,26 +795,411 @@ function render() {
   document.getElementById('cardProductQty').textContent = sumProductQty;
   document.getElementById('cardDemoQty').textContent = sumDemoQty;
 
+  // 견본 한도 업데이트
+  const demoUsedTotal = DEMO_YEAR_USED + sumDemoQty;
+  const demoRemain = DEMO_YEAR_LIMIT - demoUsedTotal;
+  document.getElementById('cardDemoLimit').textContent = demoUsedTotal + ' / ' + DEMO_YEAR_LIMIT;
+  document.getElementById('cardDemoLimitSub').textContent = '기 입고 ' + DEMO_YEAR_USED + '대 + 이번달 ' + sumDemoQty + '대';
+  const remainEl = document.getElementById('cardDemoRemain');
+  remainEl.textContent = demoRemain + '대';
+  remainEl.className = 'val ' + (demoRemain >= 10 ? '' : demoRemain >= 5 ? 'orange' : 'red');
+  remainEl.style.color = demoRemain >= 10 ? '#4ade80' : '';
+  document.getElementById('cardDemoRemainSub').textContent = '남은 월: ' + (12 - CUR_MONTH - 1) + '개월 (월 ' + (demoRemain / Math.max(1, 12 - CUR_MONTH - 1)).toFixed(1) + '대)';
+
   const rate = grandTotal / MONTHLY_TARGET;
   const ratePct = (rate * 100).toFixed(1) + '%';
   const rateEl = document.getElementById('cardRate');
   rateEl.textContent = ratePct;
   rateEl.className = 'val ' + (rate >= 1 ? 'green' : rate >= 0.8 ? 'orange' : 'red');
+  document.getElementById('cardRateSub').textContent = '목표: ' + fmt(MONTHLY_TARGET);
 
-  document.getElementById('progressPct').textContent = ratePct;
-  const fill = document.getElementById('progressFill');
-  fill.style.width = Math.min(rate * 100, 100) + '%';
-  fill.style.background = rate >= 1 ? '#4ade80' : rate >= 0.8 ? '#fbbf24' : '#f87171';
+  // Quarter target rate
+  const qStart = Math.floor(CUR_MONTH / 3) * 3;
+  const qMonths = [qStart, qStart + 1, qStart + 2];
+  const qLabel = Math.floor(CUR_MONTH / 3) + 1;
+  const qTarget = MONTHLY_TARGET * 3;
+  let qTotal = 0;
+  qMonths.forEach(m => {
+    const mNum = m + 1;
+    qTotal += (m === CUR_MONTH) ? grandTotal : (THIS_YEAR_QUARTER[mNum] || 0);
+  });
+  const qRate = qTotal / qTarget;
+  const qRatePct = (qRate * 100).toFixed(1) + '%';
+  const qRateEl = document.getElementById('cardQRate');
+  qRateEl.textContent = qRatePct;
+  qRateEl.className = 'val ' + (qRate >= 1 ? 'green' : qRate >= 0.8 ? 'orange' : 'red');
+  document.getElementById('cardQLabel').textContent = qLabel + 'Q 목표 달성율';
+  document.getElementById('cardQSub').textContent = fmt(qTotal) + ' / ' + fmt(qTarget);
+
+  // Render quarter comparison
+  renderQuarter(grandTotal);
+}
+
+function renderQuarter(thisMonthTotal) {
+  const tbody = document.getElementById('quarterBody');
+  tbody.innerHTML = '';
+
+  // Determine current quarter months
+  const qStart = Math.floor(CUR_MONTH / 3) * 3; // 0,3,6,9
+  const qMonths = [qStart, qStart + 1, qStart + 2]; // e.g. [0,1,2] for Q1
+  const qLabel = Math.floor(CUR_MONTH / 3) + 1;
+
+  let sumLY = 0, sumTY = 0;
+  qMonths.forEach(m => {
+    const mNum = m + 1; // 1-indexed
+    const ly = LAST_YEAR_QUARTER[mNum] || 0;
+    const isCurrent = (m === CUR_MONTH);
+    const ty = isCurrent ? thisMonthTotal : (THIS_YEAR_QUARTER[mNum] || 0);
+    const diff = ly - ty;
+    sumLY += ly;
+    sumTY += ty;
+
+    const tr = document.createElement('tr');
+    const currentMark = isCurrent ? ' (이번달)' : '';
+    const diffColor = diff > 0 ? '#f87171' : diff < 0 ? '#4ade80' : '#94a3b8';
+    tr.innerHTML = `
+      <td style="text-align:left">${mNum}월${currentMark}</td>
+      <td>${ly ? fmt(ly) : '-'}</td>
+      <td>${ty ? fmt(ty) : '-'}</td>
+      <td style="color:${diffColor}">${ly || ty ? fmt(diff) : '-'}</td>
+    `;
+    tbody.appendChild(tr);
+  });
+
+  // Sum row
+  const sumDiff = sumLY - sumTY;
+  const diffColor = sumDiff > 0 ? '#f87171' : sumDiff < 0 ? '#4ade80' : '#94a3b8';
+  const sumTr = document.createElement('tr');
+  sumTr.className = 'row-sum';
+  sumTr.innerHTML = `
+    <td style="text-align:left">${qLabel}Q 합계</td>
+    <td>${fmt(sumLY)}</td>
+    <td>${fmt(sumTY)}</td>
+    <td style="color:${diffColor}">${fmt(sumDiff)}</td>
+  `;
+  tbody.appendChild(sumTr);
 }
 
 function setQty(type, idx, val) {
   const v = Math.max(0, parseInt(val) || 0);
   if (type === 'product') productQty[idx] = v;
-  else demoQty[idx] = v;
+  else if (type === 'demo') demoQty[idx] = v;
   render();
 }
 
 render();
+
+// ============ 추천 발주 엔진 ============
+
+// 14개월 평균 발주 패턴 (BDTS 분석 결과 - 시스템 본체 기준)
+const AVG_PATTERN = {
+  'HS40':    { avgQty: 0,   avgAmt: 0,         avgDemo: 0.6 },
+  'HS50':    { avgQty: 0,   avgAmt: 0,         avgDemo: 0.3 },
+  'V5':      { avgQty: 3.4, avgAmt: 78853586,  avgDemo: 0.8 },
+  'V6':      { avgQty: 2.0, avgAmt: 57186436,  avgDemo: 1.4 },
+  'V7':      { avgQty: 3.6, avgAmt: 122992081, avgDemo: 1.6 },
+  'V8':      { avgQty: 2.1, avgAmt: 89708184,  avgDemo: 1.4 },
+  'RS85':    { avgQty: 0.1, avgAmt: 4103972,   avgDemo: 0.1 },
+  'R20':     { avgQty: 0.2, avgAmt: 17730274,  avgDemo: 0.1 },
+  'HM70Evo': { avgQty: 0,   avgAmt: 0,         avgDemo: 0.1 },
+};
+
+// 모델별 옵션 부착률 — BDTS 실제 분석 기반
+// 시스템 동반 옵션: 시스템 1대당 평균 옵션 수 (84% 케이스)
+// 단독 옵션 발주: 전체 BDTS 16% → 주력 모델당 월 0.3~0.5건
+const OPT_ATTACH_RATE = { 'V5': 0.3, 'V6': 0.5, 'V7': 0.4, 'V8': 0.5, 'HS40': 0.2 };
+const OPT_STANDALONE_RATE = { 'V6': 0.15, 'V7': 0.19, 'V8': 0.19, 'HS40': 0.04 };
+
+// 모델별 대표 옵션 (BDTS 부착 빈도 TOP)
+const TOP_OPTIONS = {
+  'HS40': [{ name: 'AUTOIMTPLUS', cost: 1122000 }],
+  'V5': [{ name: 'V5 ON PLUS PKG', cost: 700000 }],
+  'V6': [
+    { name: 'ORIENTAL PKG1', cost: 700000 },
+    { name: 'NEEDLEMATE-PLUS', cost: 660000 },
+  ],
+  'V7': [
+    { name: 'ORIENTAL PKG1', cost: 700000 },
+    { name: 'DICOM', cost: 550000 },
+  ],
+  'V8': [
+    { name: 'ORIENTAL PKG1', cost: 700000 },
+    { name: 'NERVETRACK', cost: 1540000 },
+  ],
+};
+
+// 작년 분기별 합계 (비교 기준선)
+const LAST_YEAR_Q_TOTAL = {};
+for (let q = 0; q < 4; q++) {
+  let sum = 0;
+  for (let m = 1; m <= 3; m++) LAST_YEAR_QUARTER[q * 3 + m] && (sum += LAST_YEAR_QUARTER[q * 3 + m]);
+  if (sum > 0) LAST_YEAR_Q_TOTAL[q] = sum;
+}
+
+function generateRecommend() {
+  // 현재 분기 기존 실적 합산
+  const qStart = Math.floor(CUR_MONTH / 3) * 3;
+  const qMonths = [qStart, qStart + 1, qStart + 2];
+  const qIdx = Math.floor(CUR_MONTH / 3); // 0=Q1
+  let qPastTotal = 0;
+  qMonths.forEach(m => {
+    if (m < CUR_MONTH) qPastTotal += (THIS_YEAR_QUARTER[m + 1] || 0);
+  });
+  const qTarget = MONTHLY_TARGET * 3;
+
+  // 작년 동분기 합계 — 이번달 발주가 이 값 이상이어야 함
+  const lastYearQTotal = LAST_YEAR_Q_TOTAL[qIdx] || 0;
+  const minForQuarter = Math.max(0, lastYearQTotal - qPastTotal); // 이번달 최소 발주액
+
+  // 주력 모델 우선순위 (수량 부족 시 증량 순서)
+  const boostOrder = ['V7', 'V5', 'V8', 'V6', 'RS85', 'R20'];
+
+  // 시나리오 생성 함수
+  function buildScenario(label, desc, qtyMultiplier, optionLevel) {
+    const recProduct = [];
+    const recDemo = [];
+    const recOptions = [];
+    let totalAmt = 0;
+    let totalOptAmt = 0;
+
+    PRODUCTS.forEach((p, i) => {
+      const pattern = AVG_PATTERN[p.name];
+      const stock = productStock[i];
+      const dStock = demoStock[i];
+
+      // 상품: 평균 기반 + 재고 고려
+      let pQty = Math.round(pattern.avgQty * qtyMultiplier);
+      if (stock >= 3 && pQty > 0) pQty = Math.max(1, pQty - 1);
+      if (pattern.avgQty === 0) pQty = 0;
+
+      // 견본: 평균 패턴 기반 + 재고 고려
+      let dQty = Math.round(pattern.avgDemo * qtyMultiplier);
+      // 견본 재고 충분하면 줄이기
+      if (dStock >= 4 && dQty > 0) dQty = Math.max(0, dQty - 1);
+      if (dStock >= 6 && dQty > 0) dQty = 0;
+      if (pattern.avgDemo === 0) dQty = 0;
+
+      const pAmt = pQty * p.cost;
+      const dAmt = dQty * p.cost;
+      totalAmt += pAmt + dAmt;
+      recProduct.push({ name: p.name, qty: pQty, amt: pAmt, cost: p.cost });
+      recDemo.push({ name: p.name, qty: dQty, amt: dAmt });
+
+      // 옵션: 시스템 동반 옵션만 (현실적 부착률)
+      if (optionLevel > 0 && pQty > 0 && TOP_OPTIONS[p.name]) {
+        const tops = TOP_OPTIONS[p.name];
+        const attachRate = OPT_ATTACH_RATE[p.name] || 0;
+        const numOpts = Math.round(pQty * attachRate * optionLevel);
+        for (let j = 0; j < Math.min(numOpts, tops.length); j++) {
+          const opt = tops[j % tops.length];
+          recOptions.push({ model: p.name, name: opt.name, cost: opt.cost, qty: 1 });
+          totalOptAmt += opt.cost;
+        }
+      }
+    });
+
+    // 단독 옵션 발주 (16% 패턴 반영, 적극적 시나리오에서만)
+    if (optionLevel >= 1.0) {
+      Object.keys(OPT_STANDALONE_RATE).forEach(model => {
+        const tops = TOP_OPTIONS[model];
+        if (!tops || tops.length === 0) return;
+        const rate = OPT_STANDALONE_RATE[model];
+        const numStandalone = Math.round(rate * 14 * optionLevel / 14); // 월평균
+        if (numStandalone > 0) {
+          const opt = tops[0];
+          recOptions.push({ model, name: opt.name + ' (단독)', cost: opt.cost, qty: numStandalone });
+          totalOptAmt += opt.cost * numStandalone;
+        }
+      });
+    }
+
+    totalAmt += totalOptAmt;
+
+    // ★ 견본 연간 한도 체크: 39대 초과 방지
+    let totalDemoQty = recDemo.reduce((s, d) => s + d.qty, 0);
+    const demoAvailable = DEMO_YEAR_LIMIT - DEMO_YEAR_USED;
+    if (totalDemoQty > demoAvailable) {
+      // 초과분 차감 (avgDemo 낮은 모델부터)
+      let excess = totalDemoQty - demoAvailable;
+      const demoSorted = recDemo.map((d, i) => ({ i, qty: d.qty, avg: AVG_PATTERN[PRODUCTS[i].name].avgDemo }))
+        .filter(d => d.qty > 0).sort((a, b) => a.avg - b.avg);
+      for (const d of demoSorted) {
+        if (excess <= 0) break;
+        const cut = Math.min(d.qty, excess);
+        recDemo[d.i].qty -= cut;
+        const cutAmt = cut * PRODUCTS[d.i].cost;
+        recDemo[d.i].amt -= cutAmt;
+        totalAmt -= cutAmt;
+        excess -= cut;
+      }
+      totalDemoQty = demoAvailable;
+    }
+
+    // ★ 작년 분기 이상 보장: 부족하면 주력 모델 증량
+    let qTotal = qPastTotal + totalAmt;
+    let boostInfo = null;
+    if (qTotal < lastYearQTotal && lastYearQTotal > 0) {
+      let deficit = lastYearQTotal - qTotal;
+      boostInfo = [];
+      for (const modelName of boostOrder) {
+        if (deficit <= 0) break;
+        const pIdx = PRODUCTS.findIndex(p => p.name === modelName);
+        if (pIdx === -1) continue;
+        const p = PRODUCTS[pIdx];
+        const addQty = Math.ceil(deficit / p.cost);
+        const actualAdd = Math.min(addQty, 3); // 최대 3대씩 증량
+        if (actualAdd > 0) {
+          recProduct[pIdx].qty += actualAdd;
+          const addAmt = actualAdd * p.cost;
+          recProduct[pIdx].amt += addAmt;
+          totalAmt += addAmt;
+          deficit -= addAmt;
+          boostInfo.push(`${modelName} +${actualAdd}대`);
+        }
+      }
+      qTotal = qPastTotal + totalAmt;
+    }
+
+    const monthRate = (totalAmt / MONTHLY_TARGET * 100).toFixed(1);
+    const qRate = (qTotal / qTarget * 100).toFixed(1);
+    const lyRate = lastYearQTotal > 0 ? (qTotal / lastYearQTotal * 100).toFixed(1) : '-';
+
+    return { label, desc, recProduct, recDemo, recOptions, totalAmt, totalOptAmt,
+             monthRate, qRate, qTotal, lyRate, boostInfo, minForQuarter };
+  }
+
+  return [
+    buildScenario('보수적', '평균 이하 + 작년 분기 달성 보장', 0.7, 0.5),
+    buildScenario('균형', '평균 수준 + 작년 분기 초과', 1.0, 0.8),
+    buildScenario('적극적', '목표 달성 + 옵션 확대 + 작년 대비 성장', 1.3, 1.0),
+  ];
+}
+
+function showRecommend() {
+  const scenarios = generateRecommend();
+  const modal = document.getElementById('recContent');
+  const qIdx = Math.floor(CUR_MONTH / 3);
+  const lastYearQTotal = LAST_YEAR_Q_TOTAL[qIdx] || 0;
+
+  let html = `<h2>추천 발주 시나리오</h2>
+    <div class="modal-sub">BDTS 14개월 패턴 + 재고 + 작년 분기 보장 기반</div>`;
+
+  // 분기 기준선 안내
+  const qStart = Math.floor(CUR_MONTH / 3) * 3;
+  let qPastTotal = 0;
+  [qStart, qStart + 1, qStart + 2].forEach(m => {
+    if (m < CUR_MONTH) qPastTotal += (THIS_YEAR_QUARTER[m + 1] || 0);
+  });
+  const minThisMonth = Math.max(0, lastYearQTotal - qPastTotal);
+
+  html += `<div class="insight" style="border-left:3px solid #f87171; padding-left:12px">
+    <strong>⚠ 분기 최소 기준선</strong><br>
+    작년 ${qIdx + 1}Q 합계: <strong>${fmt(lastYearQTotal)}</strong><br>
+    올해 기 발주: ${fmt(qPastTotal)}<br>
+    <strong style="color:#fb923c">→ 이번달 최소 ${fmt(minThisMonth)} 이상 발주 필요</strong>
+  </div>`;
+
+  // 인사이트
+  const topModels = PRODUCTS.filter((_, i) => AVG_PATTERN[PRODUCTS[i].name].avgQty > 0)
+    .sort((a, b) => AVG_PATTERN[b.name].avgQty - AVG_PATTERN[a.name].avgQty);
+  const stockHigh = PRODUCTS.filter((_, i) => productStock[i] >= 3).map(p => p.name);
+  const stockZero = PRODUCTS.filter((_, i) => productStock[i] === 0 && AVG_PATTERN[PRODUCTS[i].name].avgQty > 0).map(p => p.name);
+
+  html += `<div class="insight">
+    <strong>패턴 분석:</strong> 주력 모델 ${topModels.slice(0, 4).map(p => p.name + '(' + AVG_PATTERN[p.name].avgQty.toFixed(1) + '대/월)').join(', ')}
+    ${stockHigh.length ? '<br><strong>재고 주의:</strong> ' + stockHigh.join(', ') + ' (3대 이상 보유)' : ''}
+    ${stockZero.length ? '<br><strong>재고 부족:</strong> ' + stockZero.join(', ') + ' (상품 재고 0)' : ''}
+  </div>`;
+
+  scenarios.forEach((s, si) => {
+    const colors = ['#38bdf8', '#4ade80', '#fb923c'];
+    html += `<div class="section-label" style="border-left-color:${colors[si]}">${s.label} — ${s.desc}</div>`;
+
+    html += `<table><thead><tr>
+      <th>모델</th><th>상품</th><th>견본</th><th>기기 금액</th>
+    </tr></thead><tbody>`;
+
+    let sumP = 0, sumD = 0, sumEquipAmt = 0;
+    s.recProduct.forEach((p, i) => {
+      const d = s.recDemo[i];
+      if (p.qty === 0 && d.qty === 0) return;
+      const equipAmt = p.amt + d.amt;
+      sumP += p.qty; sumD += d.qty; sumEquipAmt += equipAmt;
+      html += `<tr>
+        <td>${p.name}</td>
+        <td style="color:#38bdf8">${p.qty || '-'}</td>
+        <td style="color:#a78bfa">${d.qty || '-'}</td>
+        <td>${fmt(equipAmt)}</td>
+      </tr>`;
+    });
+    html += `<tr class="row-sum">
+      <td>기기 소계</td><td style="color:#38bdf8">${sumP}</td><td style="color:#a78bfa">${sumD}</td>
+      <td>${fmt(sumEquipAmt)}</td>
+    </tr></tbody></table>`;
+
+    // 옵션
+    if (s.recOptions.length > 0) {
+      html += `<table><thead><tr><th>모델</th><th>옵션</th><th>수량</th><th>금액</th></tr></thead><tbody>`;
+      s.recOptions.forEach(o => {
+        html += `<tr><td>${o.model}</td><td>${o.name}</td><td>${o.qty}</td><td>${fmt(o.cost * o.qty)}</td></tr>`;
+      });
+      html += `<tr class="row-sum"><td colspan="3">옵션 소계</td><td style="color:#fb923c">${fmt(s.totalOptAmt)}</td></tr>`;
+      html += `</tbody></table>`;
+    }
+
+    // 작년 대비 표시 추가
+    const lyColor = s.lyRate >= 100 ? '#4ade80' : '#f87171';
+    const boostNote = s.boostInfo ? `<br><span style="color:#fbbf24">📌 작년 보장 증량: ${s.boostInfo.join(', ')}</span>` : '';
+
+    html += `<div class="insight" style="margin-top:4px">
+      <strong>총 발주:</strong> ${fmt(s.totalAmt)}
+      &nbsp;|&nbsp; <strong>월 달성율:</strong> <span style="color:${s.monthRate >= 100 ? '#4ade80' : s.monthRate >= 80 ? '#fbbf24' : '#f87171'}">${s.monthRate}%</span>
+      &nbsp;|&nbsp; <strong>분기 달성율:</strong> <span style="color:${s.qRate >= 100 ? '#4ade80' : s.qRate >= 80 ? '#fbbf24' : '#f87171'}">${s.qRate}%</span>
+      (${fmt(s.qTotal)} / ${fmt(MONTHLY_TARGET * 3)})
+      <br><strong>작년 동분기 대비:</strong> <span style="color:${lyColor}">${s.lyRate}%</span>
+      (${fmt(s.qTotal)} / ${fmt(lastYearQTotal)})
+      — <span style="color:${s.qTotal >= lastYearQTotal ? '#4ade80' : '#f87171'}">${s.qTotal >= lastYearQTotal ? '✓ 작년 이상 달성' : '✗ 작년 미달'}</span>
+      ${boostNote}
+      <br><strong>견본:</strong> ${s.recDemo.reduce((a,d)=>a+d.qty,0)}대 (연간 ${DEMO_YEAR_USED}+${s.recDemo.reduce((a,d)=>a+d.qty,0)}=${DEMO_YEAR_USED+s.recDemo.reduce((a,d)=>a+d.qty,0)}/${DEMO_YEAR_LIMIT}, 잔여 ${DEMO_YEAR_LIMIT-DEMO_YEAR_USED-s.recDemo.reduce((a,d)=>a+d.qty,0)}대)
+    </div>`;
+
+    html += `<div style="margin-bottom:16px">
+      <button class="btn-apply" onclick="applyScenario(${si})">이 시나리오 적용</button>
+    </div>`;
+  });
+
+  html += `<div style="text-align:right"><button class="btn-close-modal" onclick="closeRecommend()">닫기</button></div>`;
+  modal.innerHTML = html;
+  document.getElementById('recModal').classList.add('open');
+}
+
+function applyScenario(idx) {
+  const scenarios = generateRecommend();
+  const s = scenarios[idx];
+
+  s.recProduct.forEach((p, i) => { productQty[i] = p.qty; });
+  s.recDemo.forEach((d, i) => { demoQty[i] = d.qty; });
+
+  // 기존 옵션 초기화 후 추천 옵션 적용
+  options.length = 0;
+  s.recOptions.forEach(o => {
+    options.push({ model: o.model, name: o.name, cost: o.cost, qty: o.qty });
+  });
+
+  closeRecommend();
+  render();
+}
+
+function closeRecommend() {
+  document.getElementById('recModal').classList.remove('open');
+}
+
+function resetAll() {
+  productQty.fill(0);
+  demoQty.fill(0);
+  options.length = 0;
+  render();
+}
 </script>
 </body>
 </html>
